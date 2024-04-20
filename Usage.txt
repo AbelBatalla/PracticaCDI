@@ -1,0 +1,5 @@
+To compile:
+
+g++ -Os -s -o your_program your_program.cpp
+
+-Os to optimize for size and -s to strip debug information from the executable.
