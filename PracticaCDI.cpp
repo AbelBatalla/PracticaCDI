@@ -52,11 +52,8 @@ void printCompressed(const vector<uint8_t>& compressed) {
 }
 
 int main() {
-    string dnaOld = "ACGTACGTAC";
-
     string dna;
-    ifstream inputFile("./DNACorpus/AeCa"); // Open the DNA sequence file
-    //ifstream inputFile("dna_sequence.txt"); // Open the DNA sequence file
+    ifstream inputFile("./dna_sequence.txt"); // Open the DNA sequence file
 
     if (!inputFile.is_open()) {
         cout << "Failed to open the file." << endl;
@@ -81,7 +78,7 @@ int main() {
     // Write the compressed data to the file
     outputFile.write(reinterpret_cast<const char*>(compressedBytes.data()), compressedBytes.size());
     outputFile.close(); // Close the file after writing
-    cout << "Wrriten" << endl;
-
+    cout << "Written" << endl;
+    
     return 0;
 }
