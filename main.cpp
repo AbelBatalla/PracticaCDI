@@ -2,20 +2,21 @@
 #include <fstream>
 #include <cstdint>
 
-main()
-{
-    /*
-    string test = "GCCGCCCCCATGGTCCATACGGTGTGCGAATACGGCGTGGCCCTCCTTACCCCATCCAGGCCTCTCTACGCCCCACTTGTCTATAGTGCCTTTCACGACCCTGGCCACAAGGTCGATCGCGTACTCCCAGGAGACAGGCTCTAGCCTTCCTCAA";
-    
-    cout << "Encoding: " << test << endl;
-    string decoding = h.encode(test);
-    cout << decoding << endl;//*/
+int main(int argc, char* argv[]) {
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " <-c|-d> <filename>" << std::endl;
+        return 1;
+    }
+    std::string mode = argv[1];
+    std::string filename = argv[2];
+
+    if (mode == "-c") {
     Huffman h;
     string dna;
-    ifstream inputFile("./AgPh"); // Open the DNA sequence file
+    ifstream inputFile(filename); // Open the DNA sequence file
 
     if (!inputFile.is_open()) {
-        cout << "Failed to open the file." << endl;
+        std::cerr << "Failed to open the file." << endl;
         return 1; // Exit if file is not opened successfully
     }
 
@@ -24,12 +25,11 @@ main()
 
     auto compressedBytes = h.encode(dna);
     cout << "Compressed" << endl;
-    
 
     // Open a file in binary mode to write the compressed data
-    ofstream outputFile("compressed_dna.cda", ios::out | ios::binary);
+    ofstream outputFile(filename+".cda", ios::out | ios::binary);
     if (!outputFile.is_open()) {
-        cout << "Failed to open the file for writing." << endl;
+        std::cerr << "Failed to open the file for writing." << endl;
         return 1;
     }
 
@@ -38,15 +38,13 @@ main()
     outputFile.close(); // Close the file after writing
     cout << "Written" << endl;
 
-
-
-
-    /*
-    cout << "\nDecoding: " << endl;
-    cout << h.decode(decoding) << endl;
-    cout << "Original: " << endl;
-    cout << test << endl;//*/
-    
-
+    return 0;
+    }
+    else if(mode == "-d")
+    {}
+    else{
+        std::cerr << "Usage: " << argv[0] << " <-c|-d> <filename>" << std::endl;
+        return 1;
+    }
 
 }
