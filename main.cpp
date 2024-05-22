@@ -1,8 +1,26 @@
 #include "huffman.h"
-#include <fstream>
 #include <cstdint>
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {/*
+    std::vector<bool> bits = {1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0};
+    std::ofstream output("archivo.bin", std::ios::binary);
+    char buffer = 0;
+    int bitsWritten = 0;
+    for (const auto& bit : bits) {
+        buffer <<= 1;
+        buffer += bit;
+        bitsWritten++;
+        if(bitsWritten == 8){
+            output.write(&buffer, 1);
+            bitsWritten = 0;
+            buffer = 0;
+        }
+    }
+    buffer <<= 8-bitsWritten;
+    output.write(&buffer, 1);
+    output.close();
+    return 0;
+}//*/
     if (argc != 3) {
         std::cerr << "Usage: " << argv[0] << " <-c|-d> <filename>" << std::endl;
         return 1;
@@ -11,34 +29,29 @@ int main(int argc, char* argv[]) {
     std::string filename = argv[2];
 
     if (mode == "-c") {
-    Huffman h;
-    string dna;
-    ifstream inputFile(filename); // Open the DNA sequence file
+        Huffman h;
+        ifstream inputFile(filename); // Open the DNA sequence file
 
-    if (!inputFile.is_open()) {
-        std::cerr << "Failed to open the file." << endl;
-        return 1; // Exit if file is not opened successfully
-    }
+        if (!inputFile.is_open()) {
+            std::cerr << "Failed to open the file." << endl;
+            return 1; // Exit if file is not opened successfully
+        }
 
-    getline(inputFile, dna); // Read the DNA sequence from the file
-    inputFile.close(); // Close the file after reading
+        ofstream outputFile(filename+".cda", ios::out | ios::binary);
+        if (!outputFile.is_open()) {
+            std::cerr << "Failed to open the file for writing." << endl;
+            return 1;
+        }
+        
 
-    auto compressedBytes = h.encode(dna);
-    cout << "Compressed" << endl;
+        h.encode(inputFile, outputFile);
+        cout << "Compressed" << endl;
 
-    // Open a file in binary mode to write the compressed data
-    ofstream outputFile(filename+".cda", ios::out | ios::binary);
-    if (!outputFile.is_open()) {
-        std::cerr << "Failed to open the file for writing." << endl;
-        return 1;
-    }
+        inputFile.close(); // Close the file after reading
+        outputFile.close(); // Close the file after writing
+        cout << "Written" << endl;
 
-    // Write the compressed data to the file
-    outputFile.write(reinterpret_cast<const char*>(compressedBytes.data()), compressedBytes.size());
-    outputFile.close(); // Close the file after writing
-    cout << "Written" << endl;
-
-    return 0;
+        return 0;
     }
     else if(mode == "-d")
     {}
@@ -46,5 +59,4 @@ int main(int argc, char* argv[]) {
         std::cerr << "Usage: " << argv[0] << " <-c|-d> <filename>" << std::endl;
         return 1;
     }
-
-}
+}//*/
