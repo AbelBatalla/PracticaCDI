@@ -63,22 +63,25 @@ void Huffman::encode(ifstream& input, ofstream& output){
 }
 
 // Function to decode a given encoded string
-string Huffman::decode(string binary) {
-    string decoded;
-    /*for (int i = 0; i < binary.size(); ++i) {
-        for (int len = 1; i + len <= binary.size(); ++len) {
-            string substr = binary.substr(i, len);
-            auto it = decoder.find({substr.size(), stoi(substr, nullptr, 2)});
+void Huffman::decode(ifstream& input, ofstream& output) {
+    string binary;
+    getline(input, binary);
+    vector<bool> buffer;
+
+
+    for (char c : binary) {
+        for (int i = 7; i >= 0; --i) {
+            if ((c >> i) & 1) buffer.push_back(true);
+            else buffer.push_back(false);
+            auto it = decoder.find(buffer);
             if (it != decoder.end()) {
-                decoded += it->second;
-                i += len-1;
-                break;
+                buffer.clear();
+                output.write(it->second.c_str(), it -> second.size());
             }
-            else if (substr.size() > 20) {
-                throw std::runtime_error("Substring not found: " + substr);
+            else if (buffer.size() > 20) {
+                throw std::runtime_error("Huffman code not found");
             }
         }
     }
-    //*/
-    return decoded;
 }
+

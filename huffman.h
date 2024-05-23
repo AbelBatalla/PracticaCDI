@@ -34,7 +34,7 @@ class Huffman
 
         void encode(ifstream& input, ofstream& output);
 
-        string decode(string binary);
+        void decode(ifstream& input, ofstream& output);
 };
 
 #endif
