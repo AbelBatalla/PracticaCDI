@@ -6,3 +6,5 @@
 !*.cpp
 !*.txt
 !*.h
+!*.ipynb
+!*.md
