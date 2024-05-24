@@ -29,22 +29,22 @@ void Huffman::encode(ifstream& input, ofstream& output){
     char buffer = 0;
     int bitsWritten = 0;
 
-    for ( int i = 0; i < str.size(); i += 6){
-        string substr = str.substr(i, 6);
+    for ( int i = 0; i < str.size(); i += numberOfChars){
+        string substr = str.substr(i, numberOfChars);
         auto it = encoder.find(substr);
         if (it == encoder.end()) {
-            int l = 6;
+            int l = numberOfChars;
             while(it == encoder.end())
             {
                 --l;
+                if(l <= 0)
+                {
+                    throw std::runtime_error("Substring not found: " + substr);
+                }
                 substr = str.substr(i, l);
                 it = encoder.find(substr);
             }
-            i -= 6-l;
-            if(l <= 0)
-            {
-                throw std::runtime_error("Substring not found: " + substr);
-            }
+            i -= numberOfChars-l;
         }
         vector<bool> bits = it->second;
         for (const auto& bit : bits) {
@@ -64,12 +64,10 @@ void Huffman::encode(ifstream& input, ofstream& output){
 
 // Function to decode a given encoded string
 void Huffman::decode(ifstream& input, ofstream& output) {
-    string binary;
-    getline(input, binary);
+    char c;
     vector<bool> buffer;
 
-
-    for (char c : binary) {
+    while(input.get(c)) {
         for (int i = 7; i >= 0; --i) {
             if ((c >> i) & 1) buffer.push_back(true);
             else buffer.push_back(false);
@@ -84,4 +82,3 @@ void Huffman::decode(ifstream& input, ofstream& output) {
         }
     }
 }
-

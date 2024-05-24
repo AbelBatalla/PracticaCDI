@@ -1,26 +1,7 @@
 #include "huffman.h"
 #include <cstdint>
 
-int main(int argc, char* argv[]) {/*
-    std::vector<bool> bits = {1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0};
-    std::ofstream output("archivo.bin", std::ios::binary);
-    char buffer = 0;
-    int bitsWritten = 0;
-    for (const auto& bit : bits) {
-        buffer <<= 1;
-        buffer += bit;
-        bitsWritten++;
-        if(bitsWritten == 8){
-            output.write(&buffer, 1);
-            bitsWritten = 0;
-            buffer = 0;
-        }
-    }
-    buffer <<= 8-bitsWritten;
-    output.write(&buffer, 1);
-    output.close();
-    return 0;
-}//*/
+int main(int argc, char* argv[]) {
     if (argc != 3) {
         std::cerr << "Usage: " << argv[0] << " <-c|-d> <filename>" << std::endl;
         return 1;
@@ -67,7 +48,7 @@ int main(int argc, char* argv[]) {/*
             return 1; // Exit if file is not opened successfully
         }
 
-        ofstream outputFile(filename.substr(0, filename.size() - 4), ios::out | ios::binary);
+        ofstream outputFile(filename.substr(0, filename.size() - 4)+".dcp", ios::out | ios::binary);
         if (!outputFile.is_open()) {
             std::cerr << "Failed to open the file for writing." << endl;
             return 1;
