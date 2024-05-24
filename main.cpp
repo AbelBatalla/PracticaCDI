@@ -1,5 +1,4 @@
 #include "huffman.h"
-#include <cstdint>
 
 int main(int argc, char* argv[]) {
     if (argc != 3) {
@@ -30,8 +29,6 @@ int main(int argc, char* argv[]) {
 
         inputFile.close(); // Close the file after reading
         outputFile.close(); // Close the file after writing
-        cout << "Written" << endl;
-
         return 0;
     }
     else if(mode == "-d")
@@ -48,7 +45,7 @@ int main(int argc, char* argv[]) {
             return 1; // Exit if file is not opened successfully
         }
 
-        ofstream outputFile(filename.substr(0, filename.size() - 4)+"TEST.dcp", ios::out | ios::binary);
+        ofstream outputFile(filename.substr(0, filename.size() - 4)+".dcp", ios::out | ios::binary);
         if (!outputFile.is_open()) {
             std::cerr << "Failed to open the file for writing." << endl;
             return 1;
@@ -60,7 +57,6 @@ int main(int argc, char* argv[]) {
 
         inputFile.close(); // Close the file after reading
         outputFile.close(); // Close the file after writing
-        cout << "Written" << endl;
 
         return 0;
     }

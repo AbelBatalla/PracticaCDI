@@ -18,14 +18,6 @@ string Huffman::toBinary(int n) {
     }
     return r;
 }
-
-void printVectorBool(const std::vector<bool>& vec) {
-    for (bool b : vec) {
-        std::cout << b; // bool is automatically converted to 0 or 1 when printed
-    }
-    std::cout << std::endl; // Add a newline at the end for readability
-}
-
 // Function to encode a given string
 void Huffman::encode(ifstream& input, ofstream& output){
     if(needsEncoded)
@@ -54,17 +46,12 @@ void Huffman::encode(ifstream& input, ofstream& output){
             i -= numberOfChars-l;
         }
         vector<bool> bits = it->second;
-        if (count >= 0) {
-            cout << "Encoding: " << it->first << endl;
-            printVectorBool(bits);
-            --count;
-            }
+        
         for (const auto& bit : bits) {
             buffer <<= 1;
             buffer += bit;
             bitsWritten++;
             if(bitsWritten == 8){
-                if (count >= 0) cout << "Writing: " << buffer << endl;
                 output.write(&buffer, 1);
                 bitsWritten = 0;
                 buffer = 0;
@@ -73,64 +60,59 @@ void Huffman::encode(ifstream& input, ofstream& output){
     }
     buffer <<= 8-bitsWritten;
     output.write(&buffer, 1);
+    char uselessBitsThatShouldGoAndDieInAFireOrSomethingUwU = 8-bitsWritten;
+    output.write(&uselessBitsThatShouldGoAndDieInAFireOrSomethingUwU, 1);
 }
 
 // Function to decode a given encoded string
 void Huffman::decode(ifstream& input, ofstream& output) {
     char c;
     vector<bool> buffer;
-    //read(char* buffer, std::streamsize count)
 
-    //vector<char> data((std::istreambuf_iterator<char>(input)), std::istreambuf_iterator<char>());
+    char lastChar;
+    input.seekg(-1, std::ios::end); // Nos movemos al penúltimo bit
+    std::streampos fileSize = input.tellg(); // Obtenemos el tamaño del archivo a partir de la posición actual
+    input.read(&lastChar, 1); // Leemos el último byte
+    int bitsToIgnore = static_cast<unsigned char>(lastChar); // Casteamos el último byte a un entero
+    input.seekg(0, std::ios::beg); // Y volvemos al principio del archivo
 
-    /*
-        // Determine the size of the file
-    input.seekg(0, std::ios::end);
-    std::streamsize size = input.tellg();
-    input.seekg(0, std::ios::beg);
-
-    // Prepare a buffer to hold the data
-    std::vector<char> datas(size);
-
-    // Read the data
-    input.read(datas.data(), size);
-
-    cout << "Size: " << size << endl;
-    cout << "Count: " << input.gcount() << endl;
-
-    if (input.eof()) {
-        std::cout << "End of file reached." << std::endl;
-    }
-    // Check if all data was read successfully
-    if (input.gcount() != size) {
-        throw std::runtime_error("Error reading file");
-    }
-
-    for (char c : datas) {
-        */
-    while(input.get(c)) {
-        //cout << "\nDecoding char: " << c << endl;
-        for (int i = 7; i >= 0; --i) {
-            if ((c >> i) & 1) {
-                buffer.push_back(true);
-                //cout << 1;
+    while (input.read(&c, 1)) {
+        if (input.tellg() == fileSize) { // Si estás en el penúltimo byte
+            for (int i = 7; i >= bitsToIgnore; --i) { // Ignora los bits indicados
+                buffer.push_back((c >> i) & 1);
+                if(buffer.size() < minNumberOfBits) {
+                    continue;
                 }
-            else {
-                buffer.push_back(false);
-                //cout << 0;
+                else{
+                    auto it = decoder.find(buffer);
+                    if (it != decoder.end()) {
+                        buffer.clear();
+                        output.write(it->second.c_str(), it -> second.size());
+                    }
+                    else if (buffer.size() > 30) {
+                        throw std::runtime_error("Huffman code not found");
+                    }
+                }
             }
-            auto it = decoder.find(buffer);
-            if (it != decoder.end()) {
-                //cout << "\nFound code: ";
-                //printVectorBool(buffer);
-                buffer.clear();
-                //cout << it->second << endl;
-                output.write(it->second.c_str(), it -> second.size());
-            }
-            else if (buffer.size() > 30) {
-                throw std::runtime_error("Huffman code not found");
+            break;
+        }
+        else{
+            for (int i = 7; i >= 0; --i) {
+                buffer.push_back((c >> i) & 1);
+                if(buffer.size() < minNumberOfBits) {
+                    continue;
+                }
+                else{
+                    auto it = decoder.find(buffer);
+                    if (it != decoder.end()) {
+                        buffer.clear();
+                        output.write(it->second.c_str(), it -> second.size());
+                    }
+                    else if (buffer.size() > 30) {
+                        throw std::runtime_error("Huffman code not found");
+                    }
+                }
             }
         }
     }
-    cout << "Finished" << endl;
 }
