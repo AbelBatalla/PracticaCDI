@@ -42,13 +42,13 @@ int main(int argc, char* argv[]) {
         }
 
         Huffman h;
-        ifstream inputFile(filename); // Open the DNA sequence filecompressed file
+        ifstream inputFile(filename, ios::binary); // Open the DNA sequence compressed file
         if (!inputFile.is_open()) {
             std::cerr << "Failed to open the file." << endl;
             return 1; // Exit if file is not opened successfully
         }
 
-        ofstream outputFile(filename.substr(0, filename.size() - 4)+".dcp", ios::out | ios::binary);
+        ofstream outputFile(filename.substr(0, filename.size() - 4)+"TEST.dcp", ios::out | ios::binary);
         if (!outputFile.is_open()) {
             std::cerr << "Failed to open the file for writing." << endl;
             return 1;
