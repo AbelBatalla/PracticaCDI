@@ -76,7 +76,7 @@ void Huffman::decode(ifstream& input, ofstream& output) {
                 buffer.clear();
                 output.write(it->second.c_str(), it -> second.size());
             }
-            else if (buffer.size() > 20) {
+            else if (buffer.size() > 30) {
                 throw std::runtime_error("Huffman code not found");
             }
         }
