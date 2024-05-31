@@ -5,7 +5,7 @@
  Se recomienda el uso de un sistema operativo Linux aunque funcione en otros.
 
 ### Librerias necesarias:
- De STD: iostream, fstream, map, string y vector
+ De STD: iostream, fstream, unordered_map, string y vector
 
 ## Instrucciones:
 ### Compilación:
