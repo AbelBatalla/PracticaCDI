@@ -1,8 +1,8 @@
 #include "huffman.h"
 
-map<string, vector<bool>> Huffman::invertMap(const map<vector<bool>, string>& inputMap){
+unordered_map<string, vector<bool>> Huffman::invertMap(const unordered_map<vector<bool>, string>& inputMap){
     needsEncoded = false;
-    map<string, vector<bool>> invertedMap;
+    unordered_map<string, vector<bool>> invertedMap;
     for (const auto& pair : inputMap)
     {
         invertedMap[pair.second] = pair.first;
